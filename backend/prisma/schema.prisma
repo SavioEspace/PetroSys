@@ -19,18 +19,33 @@ model Perfil {
 }
 
 model Usuario {
-  id        Int     @id @default(autoincrement())
-  nome      String  @db.VarChar(150)
-  email     String  @unique @db.VarChar(255)
-  senhaHash String  @map("senha_hash") @db.VarChar(255)
-  ativo     Boolean @default(true)
-
-  perfilId Int    @map("perfil_id")
-  perfil   Perfil @relation(fields: [perfilId], references: [id])
-
+  id        Int      @id @default(autoincrement())
+  nome      String   @db.VarChar(150)
+  email     String   @unique @db.VarChar(255)
+  senhaHash String   @map("senha_hash") @db.VarChar(255)
+  ativo     Boolean  @default(true)
+  perfilId  Int      @map("perfil_id")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  perfil Perfil @relation(fields: [perfilId], references: [id])
+
   @@index([perfilId])
   @@map("usuarios")
+}
+
+model Cliente {
+  id           Int      @id @default(autoincrement())
+  razaoSocial  String   @map("razao_social") @db.VarChar(200)
+  nomeFantasia String?  @map("nome_fantasia") @db.VarChar(200)
+  cnpj         String   @unique @db.Char(14)
+  email        String?  @db.VarChar(255)
+  telefone     String?  @db.VarChar(20)
+  ativo        Boolean  @default(true)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@index([razaoSocial])
+  @@index([ativo])
+  @@map("clientes")
 }

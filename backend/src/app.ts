@@ -2,8 +2,8 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 
-import { env } from "./config/env";
-import { healthRouter } from "./modules/health/health.routes";
+import { env } from "./config/env.js";
+import { healthRouter } from "./modules/health/health.routes.js";
 
 export const app = express();
 

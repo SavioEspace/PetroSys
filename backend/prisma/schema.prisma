@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Perfil {
+  id        Int      @id @default(autoincrement())
+  nome      String   @unique @db.VarChar(30)
+  descricao String?  @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  usuarios Usuario[]
+
+  @@map("perfis")
+}
+
+model Usuario {
+  id        Int     @id @default(autoincrement())
+  nome      String  @db.VarChar(150)
+  email     String  @unique @db.VarChar(255)
+  senhaHash String  @map("senha_hash") @db.VarChar(255)
+  ativo     Boolean @default(true)
+
+  perfilId Int    @map("perfil_id")
+  perfil   Perfil @relation(fields: [perfilId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([perfilId])
+  @@map("usuarios")
+}

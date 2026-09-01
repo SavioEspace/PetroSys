@@ -7,6 +7,12 @@ datasource db {
   provider = "postgresql"
 }
 
+enum StatusContrato {
+  ATIVO
+  SUSPENSO
+  ENCERRADO
+}
+
 model Perfil {
   id        Int      @id @default(autoincrement())
   nome      String   @unique @db.VarChar(30)
@@ -19,18 +25,55 @@ model Perfil {
 }
 
 model Usuario {
-  id        Int     @id @default(autoincrement())
-  nome      String  @db.VarChar(150)
-  email     String  @unique @db.VarChar(255)
-  senhaHash String  @map("senha_hash") @db.VarChar(255)
-  ativo     Boolean @default(true)
-
-  perfilId Int    @map("perfil_id")
-  perfil   Perfil @relation(fields: [perfilId], references: [id])
-
+  id        Int      @id @default(autoincrement())
+  nome      String   @db.VarChar(150)
+  email     String   @unique @db.VarChar(255)
+  senhaHash String   @map("senha_hash") @db.VarChar(255)
+  ativo     Boolean  @default(true)
+  perfilId  Int      @map("perfil_id")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  perfil Perfil @relation(fields: [perfilId], references: [id])
+
   @@index([perfilId])
   @@map("usuarios")
+}
+
+model Cliente {
+  id           Int      @id @default(autoincrement())
+  razaoSocial  String   @map("razao_social") @db.VarChar(200)
+  nomeFantasia String?  @map("nome_fantasia") @db.VarChar(200)
+  cnpj         String   @unique @db.Char(14)
+  email        String?  @db.VarChar(255)
+  telefone     String?  @db.VarChar(20)
+  ativo        Boolean  @default(true)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  contratos Contrato[]
+
+  @@index([razaoSocial])
+  @@index([ativo])
+  @@map("clientes")
+}
+
+model Contrato {
+  id          Int            @id @default(autoincrement())
+  numero      String         @unique @db.VarChar(50)
+  objeto      String         @db.Text
+  dataInicio  DateTime       @map("data_inicio") @db.Date
+  dataFim     DateTime       @map("data_fim") @db.Date
+  status      StatusContrato @default(ATIVO)
+  observacoes String?        @db.Text
+  clienteId   Int            @map("cliente_id")
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+
+  cliente Cliente @relation(fields: [clienteId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([clienteId])
+  @@index([status])
+  @@index([dataFim])
+  @@map("contratos")
 }

@@ -27,3 +27,13 @@ export type Perfil = Prisma.PerfilModel
  * 
  */
 export type Usuario = Prisma.UsuarioModel
+/**
+ * Model Cliente
+ * 
+ */
+export type Cliente = Prisma.ClienteModel
+/**
+ * Model Contrato
+ * 
+ */
+export type Contrato = Prisma.ContratoModel

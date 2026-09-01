@@ -27,3 +27,5 @@ coverage/
 # Local authentication test files
 cookies.txt
 *.cookies.txt
+
+backend/src/generated/prisma/

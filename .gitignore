@@ -23,3 +23,7 @@ coverage/
 # Prisma
 *.db
 *.db-journal
+
+# Local authentication test files
+cookies.txt
+*.cookies.txt

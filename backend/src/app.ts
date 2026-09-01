@@ -7,6 +7,7 @@ import { env } from "./config/env.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
 import { healthRouter } from "./modules/health/health.routes.js";
 import { usersRouter } from "./modules/users/users.routes.js";
+import { clientsRouter } from "./modules/clients/clients.routes.js";
 
 export const app = express();
 
@@ -39,3 +40,7 @@ app.get("/", (_request, response) => {
 app.use("/api/v1/health", healthRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", usersRouter);
+app.use(
+  "/api/v1/clients",
+  clientsRouter
+);

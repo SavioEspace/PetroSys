@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useEffect,
   useState
 } from "react";
@@ -6,11 +7,17 @@ import {
 import {
   Activity,
   AlertTriangle,
+  ArrowRight,
   CheckCircle2,
   Clock3,
   FileWarning,
-  Gauge
+  Gauge,
+  RefreshCw
 } from "lucide-react";
+
+import {
+  useNavigate
+} from "react-router-dom";
 
 import {
   ApiError,
@@ -76,17 +83,20 @@ interface DashboardSummary {
       id: number;
       codigo: string;
       titulo: string;
+
       prioridade:
         | "BAIXA"
         | "MEDIA"
         | "ALTA"
         | "CRITICA";
+
       status:
         | "ABERTA"
         | "EM_ANDAMENTO"
         | "BLOQUEADA"
         | "CONCLUIDA"
         | "CANCELADA";
+
       prazo: string;
       createdAt: string;
       atrasada: boolean;
@@ -151,24 +161,43 @@ function formatDate(
   );
 }
 
+function formatTime(
+  value: Date
+): string {
+  return new Intl.DateTimeFormat(
+    "pt-BR",
+    {
+      hour: "2-digit",
+      minute: "2-digit"
+    }
+  ).format(value);
+}
+
 function formatStatus(
   status: string
 ): string {
   const labels:
     Record<string, string> = {
-      ABERTA: "Aberta",
+      ABERTA:
+        "Aberta",
+
       EM_ANDAMENTO:
         "Em andamento",
+
       BLOQUEADA:
         "Bloqueada",
+
       CONCLUIDA:
         "Concluída",
+
       CANCELADA:
         "Cancelada"
     };
 
-  return labels[status] ??
-    status;
+  return (
+    labels[status] ??
+    status
+  );
 }
 
 function statusClass(
@@ -176,7 +205,10 @@ function statusClass(
 ): string {
   return status
     .toLowerCase()
-    .replaceAll("_", "-");
+    .replaceAll(
+      "_",
+      "-"
+    );
 }
 
 function priorityClass(
@@ -187,6 +219,9 @@ function priorityClass(
 }
 
 export function DashboardPage() {
+  const navigate =
+    useNavigate();
+
   const [
     resumo,
     setResumo
@@ -202,44 +237,75 @@ export function DashboardPage() {
     useState(true);
 
   const [
+    refreshing,
+    setRefreshing
+  ] =
+    useState(false);
+
+  const [
     errorMessage,
     setErrorMessage
   ] =
     useState("");
 
-  useEffect(() => {
-    async function loadDashboard() {
-      try {
-        setLoading(true);
-        setErrorMessage("");
+  const [
+    lastUpdated,
+    setLastUpdated
+  ] =
+    useState<Date | null>(
+      null
+    );
 
-        const response =
-          await apiRequest<DashboardResponse>(
-            "/dashboard/summary"
+  const loadDashboard =
+    useCallback(
+      async (
+        refresh = false
+      ) => {
+        try {
+          if (refresh) {
+            setRefreshing(true);
+          } else {
+            setLoading(true);
+          }
+
+          setErrorMessage("");
+
+          const response =
+            await apiRequest<DashboardResponse>(
+              "/dashboard/summary"
+            );
+
+          setResumo(
+            response.resumo
           );
 
-        setResumo(
-          response.resumo
-        );
-      } catch (error) {
-        if (
-          error instanceof ApiError
-        ) {
-          setErrorMessage(
-            error.message
+          setLastUpdated(
+            new Date()
           );
-        } else {
-          setErrorMessage(
-            "Não foi possível carregar o dashboard."
-          );
+        } catch (error) {
+          if (
+            error instanceof
+            ApiError
+          ) {
+            setErrorMessage(
+              error.message
+            );
+          } else {
+            setErrorMessage(
+              "Não foi possível carregar o dashboard."
+            );
+          }
+        } finally {
+          setLoading(false);
+          setRefreshing(false);
         }
-      } finally {
-        setLoading(false);
-      }
-    }
+      },
+      []
+    );
 
+  useEffect(() => {
     void loadDashboard();
-  }, []);
+  }, [loadDashboard]);
 
   if (loading) {
     return (
@@ -253,10 +319,7 @@ export function DashboardPage() {
     );
   }
 
-  if (
-    errorMessage ||
-    !resumo
-  ) {
+  if (!resumo) {
     return (
       <div className="dashboard-error">
         <AlertTriangle
@@ -270,8 +333,23 @@ export function DashboardPage() {
           </strong>
 
           <p>
-            {errorMessage}
+            {errorMessage ||
+              "Não foi possível obter os indicadores operacionais."}
           </p>
+
+          <button
+            type="button"
+            className="dashboard-retry-button"
+            onClick={() =>
+              void loadDashboard()
+            }
+          >
+            <RefreshCw
+              size={15}
+            />
+
+            Tentar novamente
+          </button>
         </div>
       </div>
     );
@@ -281,6 +359,13 @@ export function DashboardPage() {
     resumo.ordensServico.abertas +
     resumo.ordensServico.emAndamento +
     resumo.ordensServico.bloqueadas;
+
+  const hasOperationalAlert =
+    resumo.ordensServico.atrasadas >
+      0 ||
+    resumo.ordensServico
+      .criticasAtivas >
+      0;
 
   return (
     <section className="page-container">
@@ -301,17 +386,63 @@ export function DashboardPage() {
           </p>
         </div>
 
-        <div className="dashboard-health">
-          <span className="health-dot" />
+        <div className="dashboard-toolbar">
+          <div className="dashboard-health">
+            <span className="health-dot" />
 
-          Dados atualizados
+            {lastUpdated
+              ? `Atualizado às ${formatTime(
+                  lastUpdated
+                )}`
+              : "Dados carregados"}
+          </div>
+
+          <button
+            type="button"
+            className="dashboard-refresh-button"
+            disabled={
+              refreshing
+            }
+            onClick={() =>
+              void loadDashboard(
+                true
+              )
+            }
+          >
+            <RefreshCw
+              size={15}
+              className={
+                refreshing
+                  ? "dashboard-refresh-icon-spinning"
+                  : ""
+              }
+            />
+
+            {refreshing
+              ? "Atualizando..."
+              : "Atualizar"}
+          </button>
         </div>
       </div>
+
+      {errorMessage && (
+        <div className="dashboard-inline-error">
+          <AlertTriangle
+            size={16}
+          />
+
+          <span>
+            {errorMessage}
+          </span>
+        </div>
+      )}
 
       <div className="metric-grid">
         <article className="metric-card">
           <div className="metric-icon">
-            <Activity size={21} />
+            <Activity
+              size={21}
+            />
           </div>
 
           <div>
@@ -334,9 +465,20 @@ export function DashboardPage() {
           </div>
         </article>
 
-        <article className="metric-card">
+        <article
+          className={`metric-card ${
+            resumo
+              .ordensServico
+              .atrasadas >
+            0
+              ? "metric-card-attention"
+              : ""
+          }`}
+        >
           <div className="metric-icon">
-            <Clock3 size={21} />
+            <Clock3
+              size={21}
+            />
           </div>
 
           <div>
@@ -399,7 +541,7 @@ export function DashboardPage() {
 
           <div>
             <span>
-              Contratos em 30 dias
+              Vencem em 30 dias
             </span>
 
             <strong>
@@ -416,11 +558,58 @@ export function DashboardPage() {
                   .contratos
                   .vencidos
               }{" "}
-              vencidos
+              contratos vencidos
             </small>
           </div>
         </article>
       </div>
+
+      {hasOperationalAlert && (
+        <div className="dashboard-alert-banner">
+          <div className="dashboard-alert-content">
+            <AlertTriangle
+              size={19}
+            />
+
+            <div>
+              <strong>
+                Atenção operacional necessária
+              </strong>
+
+              <span>
+                {
+                  resumo
+                    .ordensServico
+                    .atrasadas
+                }{" "}
+                OS atrasada(s) e{" "}
+                {
+                  resumo
+                    .ordensServico
+                    .criticasAtivas
+                }{" "}
+                crítica(s) ativa(s).
+              </span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            className="dashboard-panel-action"
+            onClick={() =>
+              navigate(
+                "/work-orders"
+              )
+            }
+          >
+            Ver ordens
+
+            <ArrowRight
+              size={15}
+            />
+          </button>
+        </div>
+      )}
 
       <div className="dashboard-grid">
         <article className="dashboard-panel status-panel">
@@ -435,7 +624,9 @@ export function DashboardPage() {
               </h2>
             </div>
 
-            <Gauge size={21} />
+            <Gauge
+              size={21}
+            />
           </div>
 
           <div className="status-grid">
@@ -622,6 +813,22 @@ export function DashboardPage() {
               Últimas ordens
             </h2>
           </div>
+
+          <button
+            type="button"
+            className="dashboard-panel-action"
+            onClick={() =>
+              navigate(
+                "/work-orders"
+              )
+            }
+          >
+            Ver todas
+
+            <ArrowRight
+              size={14}
+            />
+          </button>
         </div>
 
         {resumo.operacao
@@ -869,6 +1076,22 @@ export function DashboardPage() {
                 Próximos vencimentos
               </h2>
             </div>
+
+            <button
+              type="button"
+              className="dashboard-panel-action"
+              onClick={() =>
+                navigate(
+                  "/contracts"
+                )
+              }
+            >
+              Ver contratos
+
+              <ArrowRight
+                size={14}
+              />
+            </button>
           </div>
 
           {resumo.operacao

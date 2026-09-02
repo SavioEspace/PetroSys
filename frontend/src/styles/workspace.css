@@ -2112,3 +2112,141 @@
   font-size: 0.65rem;
   line-height: 1.45;
 }
+
+.dashboard-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.dashboard-refresh-button,
+.dashboard-panel-action,
+.dashboard-retry-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  color: #0f766e;
+  font: inherit;
+  font-size: 0.7rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.dashboard-refresh-button {
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid #d7e3e3;
+  border-radius: 7px;
+  background: #ffffff;
+}
+
+.dashboard-refresh-button:hover,
+.dashboard-retry-button:hover {
+  background: #f3f8f8;
+}
+
+.dashboard-refresh-button:disabled {
+  cursor: default;
+  opacity: 0.65;
+}
+
+.dashboard-panel-action:hover {
+  text-decoration: underline;
+}
+
+.dashboard-retry-button {
+  margin-top: 8px;
+  padding: 7px 10px;
+  border: 1px solid #d7e3e3;
+  border-radius: 7px;
+}
+
+.dashboard-refresh-icon-spinning {
+  animation: dashboard-spin 0.8s linear infinite;
+}
+
+@keyframes dashboard-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.metric-card-attention {
+  border-color: #f0c9c5;
+  background: #fffafa;
+}
+
+.metric-card-attention .metric-icon {
+  background: #fff0ee;
+  color: #c5463b;
+}
+
+.metric-card-attention strong {
+  color: #b83c32;
+}
+
+.dashboard-alert-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 14px;
+  padding: 11px 14px;
+  border: 1px solid #efd6b5;
+  border-radius: 9px;
+  background: #fffaf2;
+}
+
+.dashboard-alert-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  color: #9a5b13;
+}
+
+.dashboard-alert-content > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dashboard-alert-content strong {
+  color: #74420b;
+  font-size: 0.73rem;
+}
+
+.dashboard-alert-content span {
+  font-size: 0.66rem;
+  line-height: 1.4;
+}
+
+.dashboard-inline-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 9px 11px;
+  border: 1px solid #efd1cd;
+  border-radius: 8px;
+  background: #fff7f6;
+  color: #b4443b;
+  font-size: 0.68rem;
+}
+
+@media (max-width: 720px) {
+  .dashboard-toolbar {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .dashboard-alert-banner {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

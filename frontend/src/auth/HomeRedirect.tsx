@@ -1,6 +1,5 @@
 import {
-  Navigate,
-  Outlet
+  Navigate
 } from "react-router-dom";
 
 import {
@@ -8,17 +7,10 @@ import {
 } from "./AuthContext";
 
 import {
-  getHomeRouteForRole,
-  type Role
+  getHomeRouteForRole
 } from "./roleRouting";
 
-interface RoleRouteProps {
-  allowedRoles: Role[];
-}
-
-export function RoleRoute({
-  allowedRoles
-}: RoleRouteProps) {
+export function HomeRedirect() {
   const {
     user,
     loading
@@ -31,7 +23,7 @@ export function RoleRoute({
           <div className="spinner" />
 
           <p>
-            Verificando acesso...
+            Carregando...
           </p>
         </div>
       </div>
@@ -47,22 +39,14 @@ export function RoleRoute({
     );
   }
 
-  if (
-    !allowedRoles.includes(
-      user.perfil.nome
-    )
-  ) {
-    return (
-      <Navigate
-        to={
-          getHomeRouteForRole(
-            user.perfil.nome
-          )
-        }
-        replace
-      />
-    );
-  }
-
-  return <Outlet />;
+  return (
+    <Navigate
+      to={
+        getHomeRouteForRole(
+          user.perfil.nome
+        )
+      }
+      replace
+    />
+  );
 }

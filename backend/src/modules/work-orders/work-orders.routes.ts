@@ -11,6 +11,7 @@ import {
   getWorkOrderHistoryController,
   listWorkOrdersController,
   updateWorkOrderController,
+  listActiveTechniciansController,
   updateWorkOrderStatusController
 } from "./work-orders.controller.js";
 
@@ -36,6 +37,15 @@ workOrdersRouter.post(
     "ANALISTA"
   ),
   createWorkOrderController
+);
+workOrdersRouter.get(
+  "/technicians",
+  requireAuth,
+  requireRoles(
+    "GESTOR",
+    "ANALISTA"
+  ),
+  listActiveTechniciansController
 );
 
 workOrdersRouter.get(

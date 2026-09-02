@@ -1,4 +1,7 @@
-import { Router } from "express";
+import {
+  Router
+} from "express";
+
 import rateLimit from "express-rate-limit";
 
 import {
@@ -11,20 +14,34 @@ import {
   requireAuth
 } from "./auth.middleware.js";
 
-export const authRouter = Router();
+export const authRouter =
+  Router();
 
-const loginRateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  limit: 10,
-  standardHeaders: true,
-  legacyHeaders: false,
+const loginRateLimiter =
+  rateLimit({
+    windowMs:
+      15 * 60 * 1000,
 
-  message: {
-    error: "TOO_MANY_ATTEMPTS",
-    message:
-      "Muitas tentativas de login. Tente novamente mais tarde."
-  }
-});
+    limit:
+      10,
+
+    standardHeaders:
+      true,
+
+    legacyHeaders:
+      false,
+
+    skipSuccessfulRequests:
+      true,
+
+    message: {
+      error:
+        "TOO_MANY_ATTEMPTS",
+
+      message:
+        "Muitas tentativas de login. Tente novamente mais tarde."
+    }
+  });
 
 authRouter.post(
   "/login",

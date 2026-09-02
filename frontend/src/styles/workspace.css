@@ -1461,3 +1461,42 @@
 .status-select:focus {
   border-color: #0f766e;
 }
+
+.category-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 8px;
+  border-radius: 7px;
+  background: #f1f5f7;
+  color: #596873;
+  font-size: 0.66rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.service-status-ativo {
+  background: #edf8f0;
+  color: #287946;
+}
+
+.service-status-suspenso {
+  background: #fff5e8;
+  color: #a15c06;
+}
+
+.service-status-encerrado {
+  background: #f2f4f5;
+  color: #68737b;
+}
+
+.services-table td:first-child {
+  min-width: 230px;
+}
+
+.services-table td:nth-child(3) {
+  min-width: 145px;
+}
+
+.services-table td:nth-child(4) {
+  min-width: 150px;
+}

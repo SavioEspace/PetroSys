@@ -235,3 +235,17 @@ export async function updateUserStatus(
     usuario
   };
 }
+
+export async function listProfiles() {
+  return prisma.perfil.findMany({
+    orderBy: {
+      id: "asc"
+    },
+
+    select: {
+      id: true,
+      nome: true,
+      descricao: true
+    }
+  });
+}

@@ -19,6 +19,7 @@ import {
   getUserById,
   listUsers,
   updateUser,
+  listProfiles,
   updateUserStatus
 } from "./users.service.js";
 
@@ -279,5 +280,17 @@ export async function updateUserStatusController(
       : "Usuário desativado com sucesso.",
 
     usuario: result.usuario
+  });
+}
+
+export async function listProfilesController(
+  _request: Request,
+  response: Response
+): Promise<void> {
+  const perfis =
+    await listProfiles();
+
+  response.status(200).json({
+    perfis
   });
 }

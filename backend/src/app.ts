@@ -11,6 +11,7 @@ import { contractsRouter } from "./modules/contracts/contracts.routes.js";
 import { healthRouter } from "./modules/health/health.routes.js";
 import { usersRouter } from "./modules/users/users.routes.js";
 import { servicesRouter } from "./modules/services/services.routes.js";
+import { workOrdersRouter } from "./modules/work-orders/work-orders.routes.js";
 
 export const app = express();
 
@@ -73,4 +74,9 @@ app.use(
 app.use(
   "/api/v1/services",
   servicesRouter
+);
+
+app.use(
+  "/api/v1/work-orders",
+  workOrdersRouter
 );

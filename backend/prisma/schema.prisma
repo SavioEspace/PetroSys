@@ -19,6 +19,21 @@ enum StatusServico {
   ENCERRADO
 }
 
+enum PrioridadeOrdemServico {
+  BAIXA
+  MEDIA
+  ALTA
+  CRITICA
+}
+
+enum StatusOrdemServico {
+  ABERTA
+  EM_ANDAMENTO
+  BLOQUEADA
+  CONCLUIDA
+  CANCELADA
+}
+
 model Perfil {
   id        Int      @id @default(autoincrement())
   nome      String   @unique @db.VarChar(30)
@@ -41,6 +56,10 @@ model Usuario {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   perfil Perfil @relation(fields: [perfilId], references: [id])
+
+  ordensResponsavel OrdemServico[]    @relation("ResponsavelOrdemServico")
+  ordensCriadas     OrdemServico[]    @relation("CriadorOrdemServico")
+  historicosStatus  HistoricoStatus[]
 
   @@index([perfilId])
   @@map("usuarios")
@@ -76,8 +95,9 @@ model Contrato {
   createdAt   DateTime       @default(now()) @map("created_at")
   updatedAt   DateTime       @updatedAt @map("updated_at")
 
-  cliente  Cliente              @relation(fields: [clienteId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  servicos ServicoTecnologico[]
+  cliente       Cliente              @relation(fields: [clienteId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  servicos      ServicoTecnologico[]
+  ordensServico OrdemServico[]
 
   @@index([clienteId])
   @@index([status])
@@ -95,11 +115,64 @@ model ServicoTecnologico {
   createdAt  DateTime      @default(now()) @map("created_at")
   updatedAt  DateTime      @updatedAt @map("updated_at")
 
-  contrato Contrato @relation(fields: [contratoId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  contrato      Contrato       @relation(fields: [contratoId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  ordensServico OrdemServico[]
 
   @@unique([contratoId, nome])
   @@index([contratoId])
   @@index([status])
   @@index([categoria])
   @@map("servicos_tecnologicos")
+}
+
+model OrdemServico {
+  id            Int                    @id @default(autoincrement())
+  codigo        String                 @unique @db.VarChar(20)
+  titulo        String                 @db.VarChar(200)
+  descricao     String                 @db.Text
+  prioridade    PrioridadeOrdemServico @default(MEDIA)
+  status        StatusOrdemServico     @default(ABERTA)
+  dataAbertura  DateTime               @default(now()) @map("data_abertura")
+  prazo         DateTime               @db.Date
+  dataConclusao DateTime?              @map("data_conclusao")
+  contratoId    Int                    @map("contrato_id")
+  servicoId     Int                    @map("servico_id")
+  responsavelId Int                    @map("responsavel_id")
+  criadoPorId   Int                    @map("criado_por_id")
+  createdAt     DateTime               @default(now()) @map("created_at")
+  updatedAt     DateTime               @updatedAt @map("updated_at")
+
+  contrato    Contrato           @relation(fields: [contratoId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  servico     ServicoTecnologico @relation(fields: [servicoId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  responsavel Usuario            @relation("ResponsavelOrdemServico", fields: [responsavelId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  criadoPor   Usuario            @relation("CriadorOrdemServico", fields: [criadoPorId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  historicos HistoricoStatus[]
+
+  @@index([contratoId])
+  @@index([servicoId])
+  @@index([responsavelId])
+  @@index([criadoPorId])
+  @@index([status])
+  @@index([prioridade])
+  @@index([prazo])
+  @@map("ordens_servico")
+}
+
+model HistoricoStatus {
+  id             Int                 @id @default(autoincrement())
+  ordemServicoId Int                 @map("ordem_servico_id")
+  usuarioId      Int                 @map("usuario_id")
+  statusAnterior StatusOrdemServico? @map("status_anterior")
+  statusNovo     StatusOrdemServico  @map("status_novo")
+  observacao     String?             @db.Text
+  createdAt      DateTime            @default(now()) @map("created_at")
+
+  ordemServico OrdemServico @relation(fields: [ordemServicoId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  usuario      Usuario      @relation(fields: [usuarioId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([ordemServicoId])
+  @@index([usuarioId])
+  @@index([createdAt])
+  @@map("historicos_status")
 }

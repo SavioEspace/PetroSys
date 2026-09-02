@@ -11,9 +11,6 @@ Autores:
 - Sávio Barros
 - Gustavo Furlani
 
-Orientador:
-- Prof. Lauro Caldas
-
 ## Objetivo
 
 Desenvolver e validar uma proposta de arquitetura empresarial e de software para apoiar a gestão de contratos e serviços tecnológicos em uma organização do setor de tecnologia e energia.

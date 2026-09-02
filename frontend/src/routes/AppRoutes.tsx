@@ -1,8 +1,11 @@
 import {
-  Navigate,
   Route,
   Routes
 } from "react-router-dom";
+
+import {
+  HomeRedirect
+} from "../auth/HomeRedirect";
 
 import {
   ProtectedRoute
@@ -132,20 +135,14 @@ export function AppRoutes() {
       <Route
         path="/"
         element={
-          <Navigate
-            to="/dashboard"
-            replace
-          />
+          <HomeRedirect />
         }
       />
 
       <Route
         path="*"
         element={
-          <Navigate
-            to="/dashboard"
-            replace
-          />
+          <HomeRedirect />
         }
       />
     </Routes>

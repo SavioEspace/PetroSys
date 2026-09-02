@@ -12,6 +12,10 @@ import {
   useAuth
 } from "../../auth/AuthContext";
 
+import {
+  getRoleLabel
+} from "../../auth/roleRouting";
+
 interface HeaderProps {
   onOpenSidebar: () => void;
 }
@@ -43,7 +47,9 @@ export function Header({
       <button
         type="button"
         className="header-menu-button"
-        onClick={onOpenSidebar}
+        onClick={
+          onOpenSidebar
+        }
         aria-label="Abrir menu"
       >
         <Menu size={22} />
@@ -64,7 +70,11 @@ export function Header({
           </strong>
 
           <span>
-            {user?.perfil.nome}
+            {user
+              ? getRoleLabel(
+                  user.perfil.nome
+                )
+              : ""}
           </span>
         </div>
       </div>
@@ -76,6 +86,7 @@ export function Header({
           handleLogout
         }
         title="Sair"
+        aria-label="Sair do PetroSys"
       >
         <LogOut size={18} />
 

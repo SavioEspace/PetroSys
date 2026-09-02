@@ -914,3 +914,25 @@ export async function getWorkOrderHistory(
     historicos
   };
 }
+
+export async function listActiveTechnicians() {
+  return prisma.usuario.findMany({
+    where: {
+      ativo: true,
+
+      perfil: {
+        nome: "TECNICO"
+      }
+    },
+
+    orderBy: {
+      nome: "asc"
+    },
+
+    select: {
+      id: true,
+      nome: true,
+      email: true
+    }
+  });
+}

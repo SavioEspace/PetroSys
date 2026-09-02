@@ -40,6 +40,10 @@ import {
   ServicesPage
 } from "../pages/ServicesPage";
 
+import {
+  WorkOrdersPage
+} from "../pages/WorkOrdersPage";
+
 export function AppRoutes() {
   return (
     <Routes>
@@ -100,14 +104,11 @@ export function AppRoutes() {
           </Route>
 
           <Route
-            path="/work-orders"
-            element={
-              <PlaceholderPage
-                title="Ordens de Serviço"
-                description="Gestão e acompanhamento das atividades operacionais."
-              />
-            }
-          />
+  path="/work-orders"
+  element={
+    <WorkOrdersPage />
+  }
+/>
 
           <Route
             element={

@@ -19,6 +19,7 @@ import {
   getWorkOrderHistory,
   listWorkOrders,
   updateWorkOrder,
+  listActiveTechnicians,
   updateWorkOrderStatus
 } from "./work-orders.service.js";
 
@@ -548,5 +549,17 @@ export async function getWorkOrderHistoryController(
   response.status(200).json({
     historicos:
       result.historicos
+  });
+}
+
+export async function listActiveTechniciansController(
+  _request: AuthenticatedRequest,
+  response: Response
+): Promise<void> {
+  const tecnicos =
+    await listActiveTechnicians();
+
+  response.status(200).json({
+    tecnicos
   });
 }

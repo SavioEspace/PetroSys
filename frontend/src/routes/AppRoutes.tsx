@@ -25,10 +25,6 @@ import {
 } from "../pages/LoginPage";
 
 import {
-  PlaceholderPage
-} from "../pages/PlaceholderPage";
-
-import {
   ClientsPage
 } from "../pages/ClientsPage";
 
@@ -43,6 +39,10 @@ import {
 import {
   WorkOrdersPage
 } from "../pages/WorkOrdersPage";
+
+import {
+  UsersPage
+} from "../pages/UsersPage";
 
 export function AppRoutes() {
   return (
@@ -81,34 +81,34 @@ export function AppRoutes() {
               }
             />
 
-           <Route
-  path="/clients"
-  element={
-    <ClientsPage />
-  }
-/>
+            <Route
+              path="/clients"
+              element={
+                <ClientsPage />
+              }
+            />
 
-           <Route
-  path="/contracts"
-  element={
-    <ContractsPage />
-  }
-/>
+            <Route
+              path="/contracts"
+              element={
+                <ContractsPage />
+              }
+            />
 
-           <Route
-  path="/services"
-  element={
-    <ServicesPage />
-  }
-/>
+            <Route
+              path="/services"
+              element={
+                <ServicesPage />
+              }
+            />
           </Route>
 
           <Route
-  path="/work-orders"
-  element={
-    <WorkOrdersPage />
-  }
-/>
+            path="/work-orders"
+            element={
+              <WorkOrdersPage />
+            }
+          />
 
           <Route
             element={
@@ -122,10 +122,7 @@ export function AppRoutes() {
             <Route
               path="/users"
               element={
-                <PlaceholderPage
-                  title="Usuários"
-                  description="Administração de usuários, perfis e acessos."
-                />
+                <UsersPage />
               }
             />
           </Route>

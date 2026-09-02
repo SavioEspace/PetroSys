@@ -10,6 +10,7 @@ import {
   getUserByIdController,
   listUsersController,
   updateUserController,
+  listProfilesController,
   updateUserStatusController
 } from "./users.controller.js";
 
@@ -27,6 +28,15 @@ usersRouter.post(
   requireAuth,
   requireRoles("GESTOR"),
   createUserController
+);
+
+usersRouter.get(
+  "/profiles",
+  requireAuth,
+  requireRoles(
+    "GESTOR"
+  ),
+  listProfilesController
 );
 
 usersRouter.get(

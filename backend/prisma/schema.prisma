@@ -13,6 +13,12 @@ enum StatusContrato {
   ENCERRADO
 }
 
+enum StatusServico {
+  ATIVO
+  SUSPENSO
+  ENCERRADO
+}
+
 model Perfil {
   id        Int      @id @default(autoincrement())
   nome      String   @unique @db.VarChar(30)
@@ -70,10 +76,30 @@ model Contrato {
   createdAt   DateTime       @default(now()) @map("created_at")
   updatedAt   DateTime       @updatedAt @map("updated_at")
 
-  cliente Cliente @relation(fields: [clienteId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  cliente  Cliente              @relation(fields: [clienteId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  servicos ServicoTecnologico[]
 
   @@index([clienteId])
   @@index([status])
   @@index([dataFim])
   @@map("contratos")
+}
+
+model ServicoTecnologico {
+  id         Int           @id @default(autoincrement())
+  nome       String        @db.VarChar(150)
+  descricao  String        @db.Text
+  categoria  String        @db.VarChar(100)
+  status     StatusServico @default(ATIVO)
+  contratoId Int           @map("contrato_id")
+  createdAt  DateTime      @default(now()) @map("created_at")
+  updatedAt  DateTime      @updatedAt @map("updated_at")
+
+  contrato Contrato @relation(fields: [contratoId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([contratoId, nome])
+  @@index([contratoId])
+  @@index([status])
+  @@index([categoria])
+  @@map("servicos_tecnologicos")
 }

@@ -29,3 +29,5 @@ cookies.txt
 *.cookies.txt
 
 backend/src/generated/prisma/
+
+.env.test

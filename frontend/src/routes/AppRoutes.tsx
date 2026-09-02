@@ -32,6 +32,10 @@ import {
   ClientsPage
 } from "../pages/ClientsPage";
 
+import {
+  ContractsPage
+} from "../pages/ContractsPage";
+
 export function AppRoutes() {
   return (
     <Routes>
@@ -76,15 +80,12 @@ export function AppRoutes() {
   }
 />
 
-            <Route
-              path="/contracts"
-              element={
-                <PlaceholderPage
-                  title="Contratos"
-                  description="Gestão e acompanhamento dos contratos."
-                />
-              }
-            />
+           <Route
+  path="/contracts"
+  element={
+    <ContractsPage />
+  }
+/>
 
             <Route
               path="/services"

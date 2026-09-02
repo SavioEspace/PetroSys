@@ -1375,3 +1375,89 @@
     width: 100%;
   }
 }
+
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  padding: 0 12px;
+  border: 1px solid #dce2e6;
+  border-radius: 8px;
+  outline: 0;
+  background: #ffffff;
+  color: #33414c;
+  font: inherit;
+  font-size: 0.8rem;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.form-field select {
+  height: 45px;
+}
+
+.form-field textarea {
+  min-height: 92px;
+  padding-top: 11px;
+  padding-bottom: 11px;
+  resize: vertical;
+}
+
+.form-field select:focus,
+.form-field textarea:focus {
+  border-color: #0f766e;
+  box-shadow:
+    0 0 0 3px
+    rgba(15, 118, 110, 0.08);
+}
+
+.contract-period {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #66747e;
+  font-size: 0.7rem;
+  white-space: nowrap;
+}
+
+.contract-period svg {
+  color: #93a0a8;
+}
+
+.expired-label {
+  display: block;
+  margin-top: 5px;
+  color: #b42318;
+  font-size: 0.62rem;
+  font-weight: 750;
+}
+
+.contract-status-ativo {
+  background: #edf8f0;
+  color: #287946;
+}
+
+.contract-status-suspenso {
+  background: #fff5e8;
+  color: #a15c06;
+}
+
+.contract-status-encerrado {
+  background: #f2f4f5;
+  color: #68737b;
+}
+
+.status-select {
+  height: 34px;
+  padding: 0 8px;
+  border: 1px solid #e0e5e8;
+  border-radius: 8px;
+  outline: 0;
+  background: #ffffff;
+  color: #61707a;
+  font-size: 0.68rem;
+}
+
+.status-select:focus {
+  border-color: #0f766e;
+}

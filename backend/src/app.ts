@@ -10,6 +10,7 @@ import { clientsRouter } from "./modules/clients/clients.routes.js";
 import { contractsRouter } from "./modules/contracts/contracts.routes.js";
 import { healthRouter } from "./modules/health/health.routes.js";
 import { usersRouter } from "./modules/users/users.routes.js";
+import { servicesRouter } from "./modules/services/services.routes.js";
 
 export const app = express();
 
@@ -67,4 +68,9 @@ app.use(
 app.use(
   "/api/v1/contracts",
   contractsRouter
+);
+
+app.use(
+  "/api/v1/services",
+  servicesRouter
 );
